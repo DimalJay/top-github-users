@@ -35,7 +35,7 @@ async function updateTopFollowers() {
       users: formattedUsers
     };
 
-    const targetDir = path.join(__dirname, 'data', 'LK');
+    const targetDir = path.join(__dirname, '..', 'data', 'LK');
     const targetFilePath = path.join(targetDir, 'top_users_followers.json');
 
     if (!fs.existsSync(targetDir)) {
