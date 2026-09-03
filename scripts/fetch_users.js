@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 async function updateTopFollowers() {
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -34,9 +35,15 @@ async function updateTopFollowers() {
       users: formattedUsers
     };
 
-    // JSON file එක write කිරීම
-    fs.writeFileSync('top_users.json', JSON.stringify(outputData, null, 2));
-    console.log('top_users.json successfully created/updated!');
+    const targetDir = path.join(__dirname, 'data', 'LK');
+    const targetFilePath = path.join(targetDir, 'top_users_followers.json');
+
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
+
+    fs.writeFileSync(targetFilePath, JSON.stringify(outputData, null, 2));
+    console.log(`Saved successfully to ${targetFilePath}`);
 
   } catch (error) {
     console.error('Error fetching data:', error);
