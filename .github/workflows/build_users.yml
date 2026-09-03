@@ -24,7 +24,7 @@ jobs:
       - name: Run Fetch Script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node fetch_users.js
+        run: node scripts/fetch_users.js
 
       - name: Commit and Push if changes exist
         run: |
