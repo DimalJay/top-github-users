@@ -134,7 +134,7 @@
                 document.getElementById('max').textContent = 'Top ' + (data[codes[0]]?.maxUsers || 500);
 
                 grid.innerHTML = codes.map(code => `
-                    <a class="card" href="/${code}/">
+                    <a class="card" href="/top-github-users/${code}/">
                         <span class="code">${code}</span>
                         <span class="name">${data[code].location}</span>
                     </a>
