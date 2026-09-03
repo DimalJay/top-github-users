@@ -127,12 +127,28 @@
             background: #ffeef0;
             border-radius: 8px;
         }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #586069;
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Top 100 GitHub Users - Sri Lanka</h1>
+            <h1>Top 500 GitHub Users - Sri Lanka</h1>
             <p class="meta">Ranked by followers • Last updated: <span id="last-updated">-</span></p>
         </header>
 
@@ -151,16 +167,32 @@
         </table>
     </div>
 
+    <footer>
+        <p>Developed by <a href="https://github.com/DimalJay" target="_blank" rel="noopener">DimalJay</a></p>
+    </footer>
+
     <script>
-        async function loadUsers() {
+        const CACHE_NAME = 'top-gh-users-v1';
+        const DATA_CACHE_KEY = 'top-gh-users-data';
+        const CACHE_TTL = 24 * 60 * 60 * 1000;
+
+        async function getCachedImage(url) {
             try {
-                const response = await fetch('https://raw.githubusercontent.com/DimalJay/top-github-users-dataset/refs/heads/main/data/LK/top_users_followers.json');
-                if (!response.ok) throw new Error('Failed to load data');
-                const data = await response.json();
+                const cache = await caches.open(CACHE_NAME);
+                const cached = await cache.match(url);
+                if (cached) return cached;
+                const response = await fetch(url, { mode: 'no-cors' });
+                if (response.ok || response.type === 'opaque') cache.put(url, response.clone());
+                return response;
+            } catch (err) {
+                return fetch(url);
+            }
+        }
 
-                document.getElementById('last-updated').textContent = new Date(data.last_updated).toLocaleDateString();
+        async function loadUsers() {
+            const tbody = document.getElementById('users-body');
 
-                const tbody = document.getElementById('users-body');
+            function render(data) {
                 tbody.innerHTML = data.users.map(user => `
                     <tr>
                         <td class="rank">${user.rank}</td>
@@ -176,10 +208,38 @@
                         <td class="followers">${(user.followers_count || 0).toLocaleString()}</td>
                     </tr>
                 `).join('');
-
+                document.getElementById('last-updated').textContent = new Date(data.last_updated).toLocaleString();
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('users-table').style.display = 'table';
+                cacheImages();
+            }
+
+            function cacheImages() {
+                if (!('caches' in window)) return;
+                document.querySelectorAll('img').forEach(img => getCachedImage(img.src));
+            }
+
+            try {
+                const cached = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || 'null');
+                const fresh = cached && (Date.now() - cached._fetchedAt) < CACHE_TTL;
+
+                if (fresh) {
+                    render(cached.data);
+                    return;
+                }
+
+                const response = await fetch('https://raw.githubusercontent.com/DimalJay/top-github-users-dataset/refs/heads/main/data/LK/top_users_followers.json');
+                if (!response.ok) throw new Error('Failed to load data');
+                const data = await response.json();
+
+                localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ _fetchedAt: Date.now(), data }));
+                render(data);
             } catch (err) {
+                const cached = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || 'null');
+                if (cached) {
+                    render(cached.data);
+                    return;
+                }
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('error').textContent = err.message;
                 document.getElementById('error').style.display = 'block';
