@@ -104,6 +104,11 @@
             text-decoration: underline;
         }
 
+        .public-name {
+            font-size: 0.8125rem;
+            color: #586069;
+        }
+
         .followers {
             font-weight: 600;
             color: #24292e;
@@ -162,7 +167,10 @@
                         <td>
                             <div class="user">
                                 <img class="avatar" src="${user.avatar_url}" alt="${user.username}" loading="lazy">
-                                <a class="username" href="${user.profile_url}" target="_blank" rel="noopener">${user.username}</a>
+                                <div>
+                                    <a class="username" href="${user.profile_url}" target="_blank" rel="noopener">${user.username}</a>
+                                    ${user.name ? `<div class="public-name">${user.name}</div>` : ''}
+                                </div>
                             </div>
                         </td>
                         <td class="followers">${(user.followers_count || 0).toLocaleString()}</td>
