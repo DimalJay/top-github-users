@@ -131,13 +131,12 @@
                 const data = await response.json();
 
                 const codes = Object.keys(data);
-                const names = { WW: 'Worldwide' };
-                document.getElementById('max').textContent = 'Top 1000';
+                document.getElementById('max').textContent = 'Top ' + (data[codes[0]]?.maxUsers || 500);
 
                 grid.innerHTML = codes.map(code => `
                     <a class="card" href="/top-github-users/${code}/">
                         <span class="code">${code}</span>
-                        <span class="name">${data[code].location || names[code] || code}</span>
+                        <span class="name">${data[code].location}</span>
                     </a>
                 `).join('');
 
