@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top GitHub Users by Country</title>
-    <style>
+    <title>GitHub Growth Trends by Country</title>
+    <meta name="description" content="Year-by-year GitHub users and organizations by country.">    <style>
         * {
             margin: 0;
             padding: 0;
@@ -19,68 +19,171 @@
         }
 
         .container {
-            max-width: 720px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: 3rem 1rem;
+            padding: 2rem 1rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         h1 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
         .meta {
             color: #586069;
-            font-size: 1rem;
+            font-size: 0.875rem;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
+        .nav {
+            margin-top: 1.25rem;
         }
 
-        .card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 2rem 1rem;
+        .nav a,
+        .nav a.btn {
+            display: inline-block;
+            margin: 0.25rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: #0366d6;
+            border: 1px solid #d1d5da;
+            background: #fff;
+        }
+
+        .nav a:hover {
+            border-color: #0366d6;
+        }
+
+        .nav a.active {
+            background: #24292e;
+            color: #fff;
+            border-color: #24292e;
+        }
+
+        .panel {
             background: #fff;
             border: 1px solid #d1d5da;
             border-radius: 8px;
-            text-decoration: none;
-            color: #24292e;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(27, 31, 35, 0.15);
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
-        .card .code {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0366d6;
-        }
-
-        .card .name {
+        .controls label {
             font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        select {
+            font: inherit;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            background: #fff;
+            color: #24292e;
+            min-width: 200px;
+        }
+
+        select:focus,
+        select:hover {
+            border-color: #0366d6;
+            outline: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat {
+            padding: 1rem;
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+        }
+
+        .stat .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #586069;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat .value {
+            font-size: 1.375rem;
+            font-weight: 600;
+        }
+
+        .stat .sub {
+            font-size: 0.75rem;
             color: #586069;
         }
 
+        .chart-wrap {
+            position: relative;
+            height: 380px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        caption {
+            text-align: left;
+            font-weight: 600;
+            padding-bottom: 0.75rem;
+        }
+
+        th {
+            background: #24292e;
+            color: #fff;
+            font-weight: 600;
+            text-align: left;
+            padding: 0.6rem 0.9rem;
+        }
+
+        th:not(:first-child),
+        td:not(:first-child) {
+            text-align: right;
+        }
+
+        td {
+            padding: 0.55rem 0.9rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f6f8fa;
+        }
+
+        .note {
+            font-size: 0.8125rem;
+            color: #586069;
+            margin-top: 1rem;
+        }
+
         #error {
-            margin: 2rem auto;
-            max-width: 500px;
             text-align: center;
             padding: 1.5rem;
             color: #d73a49;
@@ -90,7 +193,7 @@
 
         footer {
             text-align: center;
-            margin-top: 3rem;
+            padding: 2rem 1rem;
             color: #586069;
             font-size: 0.875rem;
         }
@@ -103,53 +206,256 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        @media (max-width: 600px) {
+            .chart-wrap {
+                height: 280px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Top GitHub Users by Country</h1>
-            <p class="meta">Ranked by followers • <span id="max">Top 500</span> per country</p>
+            <h1>GitHub Growth Trends</h1>
+            <p class="meta">Accounts created per year • Updated <span id="last-updated">-</span></p>
+            <nav class="nav">
+                <a class="active" href="/top-github-users/">Trends</a>
+                <a href="/top-github-users/countries/">Countries</a>
+            </nav>
         </header>
 
-        <div id="loading">Loading countries...</div>
         <div id="error" style="display: none;"></div>
 
-        <div class="grid" id="country-grid" style="display: none;"></div>
+        <div class="panel">
+            <div class="controls">
+                <label for="country-select">Country</label>
+                <select id="country-select" aria-label="Select a country"></select>
+            </div>
+            <div class="chart-wrap">
+                <canvas id="chart" role="img" aria-label="Line chart of accounts created per year"></canvas>
+            </div>
+            <p class="note">
+                Counts come from GitHub's search API, which reports an approximate total once a
+                query matches more than 1,000 results. Treat sharp year-to-year swings as noise
+                rather than real change. The current year is still in progress, so its point is
+                a partial total.
+            </p>
+        </div>
 
-        <footer>
-            <p>Developed by <a href="https://github.com/DimalJay" target="_blank" rel="noopener">DimalJay</a></p>
-        </footer>
+        <div class="panel">
+            <div class="stats" id="stats"></div>
+        </div>
+
+        <div class="panel">
+            <table>
+                <caption id="table-caption">Year-by-year totals</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Year</th>
+                        <th scope="col">Users</th>
+                        <th scope="col">Organizations</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body"></tbody>
+            </table>
+        </div>
     </div>
 
+    <footer>
+        <p>Developed by <a href="https://github.com/DimalJay" target="_blank" rel="noopener">DimalJay</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
-        async function loadCountries() {
-            const grid = document.getElementById('country-grid');
+        const BASE = 'https://raw.githubusercontent.com/DimalJay/top-github-users-dataset/refs/heads/main/';
+        const CACHE_TTL = 24 * 60 * 60 * 1000;
+        const nf = new Intl.NumberFormat('en-US');
+        const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
+
+        let countries = {};
+        let chart = null;
+
+        async function loadJSON(path) {
+            const key = 'top-gh-trends:' + path;
             try {
-                const response = await fetch('https://raw.githubusercontent.com/DimalJay/top-github-users-dataset/refs/heads/main/countries.json');
-                if (!response.ok) throw new Error('Failed to load countries');
-                const data = await response.json();
-
-                const codes = Object.keys(data);
-                document.getElementById('max').textContent = 'Top ' + (data[codes[0]]?.maxUsers || 500);
-
-                grid.innerHTML = codes.map(code => `
-                    <a class="card" href="/top-github-users/${code}/">
-                        <span class="code">${code}</span>
-                        <span class="name">${data[code].location}</span>
-                    </a>
-                `).join('');
-
-                document.getElementById('loading').style.display = 'none';
-                grid.style.display = 'grid';
+                const cached = JSON.parse(localStorage.getItem(key) || 'null');
+                if (cached && (Date.now() - cached._fetchedAt) < CACHE_TTL) return cached.data;
             } catch (err) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').textContent = err.message;
-                document.getElementById('error').style.display = 'block';
+                /* fall through to network */
+            }
+
+            const response = await fetch(BASE + path);
+            if (!response.ok) throw new Error('Failed to load ' + path);
+            const data = await response.json();
+
+            try {
+                localStorage.setItem(key, JSON.stringify({ _fetchedAt: Date.now(), data }));
+            } catch (err) {
+                /* quota exceeded - caching is optional */
+            }
+            return data;
+        }
+
+        function buildYears(userCounts, orgCounts) {
+            return [...new Set([...Object.keys(userCounts), ...Object.keys(orgCounts)])].sort();
+        }
+
+        function renderStats(users, orgs, years, userCounts) {
+            const latest = years[years.length - 1];
+            const peakYear = years.reduce((best, y) =>
+                (userCounts[y] || 0) > (userCounts[best] || 0) ? y : best, years[0]);
+
+            document.getElementById('stats').innerHTML = `
+                <div class="stat">
+                    <div class="label">Total users</div>
+                    <div class="value">${nf.format(users.total || 0)}</div>
+                    <div class="sub">since ${years[0]}</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Total orgs</div>
+                    <div class="value">${nf.format(orgs.total || 0)}</div>
+                    <div class="sub">since ${years[0]}</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Peak user year</div>
+                    <div class="value">${peakYear}</div>
+                    <div class="sub">${nf.format(userCounts[peakYear] || 0)} users</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Users in ${latest}</div>
+                    <div class="value">${nf.format(userCounts[latest] || 0)}</div>
+                    <div class="sub">year in progress</div>
+                </div>
+            `;
+        }
+
+        function renderTable(years, userCounts, orgCounts) {
+            document.getElementById('data-body').innerHTML = years.slice().reverse().map(y => `
+                <tr>
+                    <td>${y}</td>
+                    <td>${nf.format(userCounts[y] || 0)}</td>
+                    <td>${(orgCounts[y] === undefined ? 'n/a' : nf.format(orgCounts[y]))}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderChart(years, userCounts, orgCounts) {
+            const ctx = document.getElementById('chart');
+            const datasets = [
+                {
+                    label: 'Users',
+                    data: years.map(y => userCounts[y] ?? null),
+                    borderColor: '#0366d6',
+                    backgroundColor: 'rgba(3, 102, 214, 0.12)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Organizations',
+                    data: years.map(y => orgCounts[y] ?? null),
+                    borderColor: '#d73a49',
+                    backgroundColor: 'rgba(215, 58, 73, 0.08)',
+                    borderWidth: 2,
+                    borderDash: [6, 4],
+                    tension: 0.3,
+                    fill: true
+                }
+            ];
+
+            if (chart) {
+                chart.data.labels = years;
+                chart.data.datasets = datasets;
+                chart.update();
+                return;
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: years, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'top', align: 'end' },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ctx.dataset.label + ': ' +
+                                    (ctx.parsed.y === null ? 'n/a' : nf.format(ctx.parsed.y))
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: v => compact.format(v) }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        async function selectCountry(code) {
+            const error = document.getElementById('error');
+            try {
+                const [users, orgs] = await Promise.all([
+                    loadJSON('data/' + code + '/user_count.json'),
+                    loadJSON('data/' + code + '/org_count.json').catch(() => ({ counts: {}, total: 0 }))
+                ]);
+
+                const userCounts = users.counts || {};
+                const orgCounts = orgs.counts || {};
+                const years = buildYears(userCounts, orgCounts);
+
+                if (!years.length) throw new Error('No data for ' + code);
+
+                renderChart(years, userCounts, orgCounts);
+                renderStats(users, orgs, years, userCounts);
+                renderTable(years, userCounts, orgCounts);
+
+                document.getElementById('table-caption').textContent =
+                    'Year-by-year totals - ' + (countries[code]?.location || code);
+                document.getElementById('last-updated').textContent =
+                    new Date(users.last_updated).toLocaleDateString();
+                error.style.display = 'none';
+            } catch (err) {
+                error.textContent = err.message;
+                error.style.display = 'block';
             }
         }
 
-        loadCountries();
+        async function init() {
+            const select = document.getElementById('country-select');
+            countries = await loadJSON('countries.json');
+
+            select.innerHTML = Object.entries(countries)
+                .map(([code, meta]) => `<option value="${code}">${code} - ${meta.location}</option>`)
+                .join('');
+
+            const fromHash = window.location.hash.replace('#', '').toUpperCase();
+            const initial = countries[fromHash] ? fromHash : 'US';
+            select.value = initial;
+
+            select.addEventListener('change', () => {
+                window.location.hash = select.value;
+                selectCountry(select.value);
+            });
+
+            window.addEventListener('hashchange', () => {
+                const code = window.location.hash.replace('#', '').toUpperCase();
+                if (countries[code] && code !== select.value) {
+                    select.value = code;
+                    selectCountry(code);
+                }
+            });
+
+            selectCountry(initial);
+        }
+
+        init();
     </script>
 </body>
 </html>

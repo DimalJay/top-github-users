@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top GitHub Users by Country</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #24292e;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta {
+            color: #586069;
+            font-size: 1rem;
+        }
+
+        .nav a:hover {
+            border-color: #0366d6;
+        }
+
+        .nav {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav a {
+            display: inline-block;
+            margin: 0.25rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: #0366d6;
+            border: 1px solid #d1d5da;
+            background: #fff;
+        }
+
+        .nav a.active {
+            background: #24292e;
+            color: #fff;
+            border-color: #24292e;
+        }
+
+        .meta a:hover {
+            border-color: #0366d6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 2rem 1rem;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #24292e;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(27, 31, 35, 0.15);
+        }
+
+        .card .code {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0366d6;
+        }
+
+        .card .name {
+            font-size: 0.875rem;
+            color: #586069;
+        }
+
+        #error {
+            margin: 2rem auto;
+            max-width: 500px;
+            text-align: center;
+            padding: 1.5rem;
+            color: #d73a49;
+            background: #ffeef0;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #586069;
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Top GitHub Users by Country</h1>
+            <p class="meta">Ranked by followers • <span id="max">Top 500</span> per country</p>
+            <nav class="nav">
+                <a href="/top-github-users/">Trends</a>
+                <a class="active" href="/top-github-users/countries/">Countries</a>
+            </nav>
+        </header>
+
+        <div id="loading">Loading countries...</div>
+        <div id="error" style="display: none;"></div>
+
+        <div class="grid" id="country-grid" style="display: none;"></div>
+
+        <footer>
+            <p>Developed by <a href="https://github.com/DimalJay" target="_blank" rel="noopener">DimalJay</a></p>
+        </footer>
+    </div>
+
+    <script>
+        async function loadCountries() {
+            const grid = document.getElementById('country-grid');
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/DimalJay/top-github-users-dataset/refs/heads/main/countries.json');
+                if (!response.ok) throw new Error('Failed to load countries');
+                const data = await response.json();
+
+                const codes = Object.keys(data);
+                document.getElementById('max').textContent = 'Top ' + (data[codes[0]]?.maxUsers || 500);
+
+                grid.innerHTML = codes.map(code => `
+                    <a class="card" href="/top-github-users/${code}/">
+                        <span class="code">${code}</span>
+                        <span class="name">${data[code].location}</span>
+                    </a>
+                `).join('');
+
+                document.getElementById('loading').style.display = 'none';
+                grid.style.display = 'grid';
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = err.message;
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        loadCountries();
+    </script>
+</body>
+</html>
